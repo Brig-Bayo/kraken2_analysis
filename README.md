@@ -9,7 +9,7 @@ Krak is a streamlined bash script designed to automate the taxonomic classificat
 ## ✨ Features
 
 - **Batch Processing**: Automatically processes all FASTA files in a directory
-- **Multiple File Format Support**: Handles `.fasta`, `.fa`, and `.fas` file extensions
+- **Multiple File Format Support**: Handles `.fasta`, `.fa`, `.fas`and `.fastq` file extensions
 - **Comprehensive Output**: Generates classification results, detailed reports, and separated read files
 - **Progress Tracking**: Real-time progress updates with file counters
 - **Error Handling**: Robust error checking for directories, databases, and file existence
