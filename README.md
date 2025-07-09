@@ -172,7 +172,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Bright Boamah**
 
 - GitHub: [@brightboamah](https://github.com/brightboamah)
-- Email: [your.email@example.com](briteboafo@icloud.com)
+- Email: [briteboafo@icloud.com](briteboafo@icloud.com)
 
 ## 🙏 Acknowledgments
 
