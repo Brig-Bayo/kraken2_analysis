@@ -1,158 +1,189 @@
+# Krak - Kraken2 Batch Processing Script
 
-# Kraken2 Metagenomic Analysis Script
+A powerful and user-friendly bash script for batch processing FASTA files using Kraken2 taxonomic classification.
 
-**Author:** Bright Boamah  
-**Date:** July 2025
+## 🧬 Overview
 
-## Description
+Krak is a streamlined bash script designed to automate the taxonomic classification of multiple FASTA files using Kraken2. It processes all FASTA files in a specified directory and generates comprehensive output including classification results, reports, and separated classified/unclassified reads.
 
-This comprehensive bash script automates the analysis of metagenomic files using Kraken2, a taxonomic classification system. The script handles database setup, file validation, and provides detailed analysis results with summary statistics.
+## ✨ Features
 
-## Features
+- **Batch Processing**: Automatically processes all FASTA files in a directory
+- **Multiple File Format Support**: Handles `.fasta`, `.fa`, and `.fas` file extensions
+- **Comprehensive Output**: Generates classification results, detailed reports, and separated read files
+- **Progress Tracking**: Real-time progress updates with file counters
+- **Error Handling**: Robust error checking for directories, databases, and file existence
+- **Flexible Configuration**: Customizable input/output directories with sensible defaults
+- **Multi-threading Support**: Configurable thread usage for optimal performance
 
-- **Automated Database Setup**: Downloads and builds Kraken2 databases automatically
-- **Comprehensive Error Handling**: Validates input files and checks for dependencies
-- **Flexible Configuration**: Supports custom thread counts and confidence thresholds
-- **Detailed Logging**: Color-coded output with timestamps
-- **Summary Statistics**: Provides classification rates and top results
-- **Safe Execution**: Uses bash strict mode for error prevention
+## 📋 Requirements
 
-## Prerequisites
+### Software Dependencies
+- **Kraken2**: Taxonomic classification system
+- **Bash**: Version 4.0 or higher
+- **Standard Unix utilities**: `find`, `wc`, `basename`, `mkdir`
 
-Before running the script, ensure you have:
+### System Requirements
+- Linux/Unix operating system
+- Sufficient disk space for output files
+- RAM requirements depend on the Kraken2 database size
 
-1. **Kraken2** installed on your system
-2. **bc** (basic calculator) for percentage calculations
-3. Sufficient disk space for database files (typically 50-100 GB)
-4. Internet connection for downloading database libraries
+### Database Requirements
+- Kraken2 database (script is configured for standard 16GB database)
+- Database path: `/media/paa/one/k2_standard_16gb_20250402` (configurable in script)
 
-### Installing Kraken2
+## 🚀 Installation
 
-```bash
-# Ubuntu/Debian
-sudo apt-get update
-sudo apt-get install kraken2
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/brightboamah/krak.git
+   cd krak
+   ```
 
-# CentOS/RHEL
-sudo yum install kraken2
+2. **Make the script executable**:
+   ```bash
+   chmod +x krak.sh
+   ```
 
-# Or compile from source
-git clone https://github.com/DerrickWood/kraken2.git
-cd kraken2
-./install_kraken2.sh $HOME/kraken2
-```
+3. **Install Kraken2** (if not already installed):
+   ```bash
+   # Using conda
+   conda install -c bioconda kraken2
+   
+   # Or using apt (Ubuntu/Debian)
+   sudo apt-get install kraken2
+   ```
 
-## Usage
+4. **Download Kraken2 database**:
+   ```bash
+   # Download standard database (adjust path as needed)
+   kraken2-build --download-taxonomy --db /path/to/your/database
+   kraken2-build --download-library bacteria --db /path/to/your/database
+   kraken2-build --build --db /path/to/your/database
+   ```
+
+## 📖 Usage
 
 ### Basic Usage
 
 ```bash
-./analyze_metagenome.sh <input_file> <output_file> <database_name>
+./krak.sh [INPUT_DIR] [OUTPUT_DIR]
 ```
 
-### Advanced Usage
+### Parameters
+
+- `INPUT_DIR`: Directory containing FASTA files (default: current directory)
+- `OUTPUT_DIR`: Directory for output files (default: `./kraken_output`)
+
+### Help
 
 ```bash
-./analyze_metagenome.sh sample.fastq results.txt my_db --threads 8 --confidence 0.1
+./krak.sh -h
+# or
+./krak.sh --help
 ```
 
-### Options
+## 💡 Examples
 
-- `-t, --threads NUM`: Number of threads to use (default: 4)
-- `-c, --confidence NUM`: Confidence threshold (default: 0.0)
-- `-h, --help`: Show help message
-
-### Examples
-
+### Example 1: Process files in current directory
 ```bash
-# Basic analysis with default settings
-./analyze_metagenome.sh sample.fastq results.txt bacterial_db
+./krak.sh
+```
+This will process all FASTA files in the current directory and save results to `./kraken_output/`.
 
-# High-performance analysis with 16 threads
-./analyze_metagenome.sh sample.fastq results.txt bacterial_db --threads 16
-
-# Conservative analysis with higher confidence threshold
-./analyze_metagenome.sh sample.fastq results.txt bacterial_db --confidence 0.5
+### Example 2: Specify input and output directories
+```bash
+./krak.sh /path/to/fasta/files /path/to/results
 ```
 
-## Input File Formats
+### Example 3: Process files from a specific directory with default output
+```bash
+./krak.sh /home/user/sequences
+```
 
-The script accepts various sequence file formats supported by Kraken2:
-- FASTA (.fasta, .fa)
-- FASTQ (.fastq, .fq)
-- Gzipped files (.gz)
+## 📁 Output Files
 
-## Output Files
+For each input FASTA file, the script generates:
 
-The script generates two main output files:
+| File Type | Description | Example Filename |
+|-----------|-------------|------------------|
+| **Classification Output** | Kraken2 classification results | `sample_kraken2_output.txt` |
+| **Report** | Taxonomic classification report | `sample_kraken2_report.txt` |
+| **Unclassified Reads** | Reads that couldn't be classified | `sample_unclassified_reads.fastq` |
+| **Classified Reads** | Successfully classified reads | `sample_classified_reads.fastq` |
 
-1. **Main Output File**: Contains classification results for each read
-2. **Report File** (`.report`): Contains taxonomic summary with read counts
+## ⚙️ Configuration
 
-## Database Information
+### Modifying Database Path
+Edit the `DB_PATH` variable in the script:
+```bash
+DB_PATH="/path/to/your/kraken2/database"
+```
 
-The script automatically downloads and builds bacterial databases. The database building process includes:
+### Adjusting Thread Count
+Modify the `THREADS` variable for your system:
+```bash
+THREADS=8  # Adjust based on your CPU cores
+```
 
-1. **Taxonomy Download**: NCBI taxonomic information
-2. **Library Download**: Bacterial genome sequences
-3. **Database Building**: Creating the Kraken2 index
-
-**Note**: Database building can take several hours and requires significant disk space.
-
-## Performance Considerations
-
-- **Memory Usage**: Kraken2 databases require substantial RAM (typically 8-32 GB)
-- **Disk Space**: Database files can be 50-100 GB or larger
-- **CPU Usage**: More threads generally improve performance
-- **Network**: Initial database download requires stable internet connection
-
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
-1. **Out of Memory**: Reduce thread count or use a smaller database
-2. **Disk Space**: Ensure sufficient space for database files
-3. **Network Issues**: Database download may fail; script will retry
-4. **Permission Errors**: Ensure write permissions for output directory
+1. **"Database directory is missing or empty"**
+   - Ensure the Kraken2 database is properly downloaded and built
+   - Verify the `DB_PATH` variable points to the correct location
 
-### Error Messages
+2. **"No FASTA files found"**
+   - Check that your input directory contains files with `.fasta`, `.fa`, or `.fas` extensions
+   - Verify the input directory path is correct
 
-The script provides detailed error messages with suggested solutions:
+3. **Permission denied**
+   - Make sure the script is executable: `chmod +x krak.sh`
+   - Ensure you have write permissions for the output directory
 
-- Dependency checks ensure required software is installed
-- File validation prevents analysis of missing/empty files
-- Progress logging helps identify where issues occur
+4. **Kraken2 command not found**
+   - Install Kraken2 or ensure it's in your PATH
+   - Check installation with: `kraken2 --version`
 
-## Example Output
+## 📊 Performance Tips
 
-```
-[2025-07-03 06:15:00] Input file: sample.fastq (1.2G)
-[2025-07-03 06:15:00] Output file: results.txt
-[2025-07-03 06:15:00] Database: bacterial_db
-[2025-07-03 06:15:00] Threads: 8
-[2025-07-03 06:15:00] Confidence threshold: 0.1
-[2025-07-03 06:15:00] Starting Kraken2 analysis...
-[SUCCESS] Analysis completed in 450 seconds
+- **Memory**: Ensure sufficient RAM for your Kraken2 database
+- **Storage**: Allow adequate disk space for output files (can be substantial for large datasets)
+- **Threads**: Adjust thread count based on your CPU cores and available memory
+- **Database**: Use appropriate database size for your classification needs
 
-=== ANALYSIS SUMMARY ===
-Total reads processed: 100000
-Classified reads: 75000
-Unclassified reads: 25000
-Classification rate: 75.00%
+## 🤝 Contributing
 
-Output files:
-  - Main output: results.txt
-  - Report: results.txt.report
-```
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## License
+### Development Guidelines
+- Follow bash best practices
+- Add comments for complex logic
+- Test with various file formats and sizes
+- Ensure error handling is robust
 
-This script is provided as-is for educational and research purposes. Please cite appropriately if used in publications.
+## 📄 License
 
-## Contact
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-For questions or issues, please contact Bright Boamah.
+## 👨‍💻 Author
+
+**Bright Boamah**
+
+- GitHub: [@brightboamah](https://github.com/brightboamah)
+- Email: [your.email@example.com](briteboafo@icloud.com)
+
+## 🙏 Acknowledgments
+
+- [Kraken2](https://github.com/DerrickWood/kraken2) development team for the excellent taxonomic classification tool
+- The bioinformatics community for continuous support and feedback
+
+## 📚 References
+
+- Wood, D.E., Lu, J. & Langmead, B. Improved metagenomic analysis with Kraken 2. Genome Biol 20, 257 (2019). https://doi.org/10.1186/s13059-019-1891-0
 
 ---
 
-**Note**: This script is designed for research purposes. Always validate results and consider computational resources before running large-scale analyses.
+⭐ If you find this script useful, please consider giving it a star on GitHub!
+
