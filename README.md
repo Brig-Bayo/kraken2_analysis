@@ -1,6 +1,6 @@
 # Krak - Kraken2 Batch Processing Script
 
-A powerful and user-friendly bash script for batch processing FASTA files using Kraken2 taxonomic classification.
+A powerful and user-friendly bash script for batch processing FASTA/FASTQ and derivative files using Kraken2 taxonomic classification.
 
 ## 🧬 Overview
 
@@ -30,7 +30,7 @@ Krak is a streamlined bash script designed to automate the taxonomic classificat
 
 ### Database Requirements
 - Kraken2 database (script is configured for standard 16GB database)
-- Database path: `/media/paa/one/k2_standard_16gb_20250402` (configurable in script)
+- Database path: `/path/database` (configurable in script)
 
 ## 🚀 Installation
 
@@ -72,7 +72,7 @@ Krak is a streamlined bash script designed to automate the taxonomic classificat
 
 ### Parameters
 
-- `INPUT_DIR`: Directory containing FASTA files (default: current directory)
+- `INPUT_DIR`: Directory containing files (default: current directory)
 - `OUTPUT_DIR`: Directory for output files (default: `./kraken_output`)
 
 ### Help
@@ -89,11 +89,11 @@ Krak is a streamlined bash script designed to automate the taxonomic classificat
 ```bash
 ./krak.sh
 ```
-This will process all FASTA files in the current directory and save results to `./kraken_output/`.
+This will process all FASTA/FASTQ files in the current directory and save results to `./kraken_output/`.
 
 ### Example 2: Specify input and output directories
 ```bash
-./krak.sh /path/to/fasta/files /path/to/results
+./krak.sh /path/to/fasta-fastq/files /path/to/results
 ```
 
 ### Example 3: Process files from a specific directory with default output
@@ -135,7 +135,7 @@ THREADS=8  # Adjust based on your CPU cores
    - Verify the `DB_PATH` variable points to the correct location
 
 2. **"No FASTA files found"**
-   - Check that your input directory contains files with `.fasta`, `.fa`, or `.fas` extensions
+   - Check that your input directory contains files with `.fasta`, `.fa`, or `.fas` or `.fastq` or `.fastq.gz`extensions
    - Verify the input directory path is correct
 
 3. **Permission denied**
