@@ -6,9 +6,9 @@ set -e
 DIR="/media/paa/fyles/1602095876/Data-analyses/July/krak/"
 
 # Define variables
-DB_PATH="/media/paa/one/k2_standard_16gb_20250402"
+DB_PATH="/path/to/database/"
 THREADS=10
-CURRENT_DIR="/media/paa/fyles/1602095876/Data-analyses/July/krak"
+CURRENT_DIR="/path/to/directory"
 
 # Create output directories if they don't exist
 OUTPUT_BASE="$DIR/kraken_output"
